@@ -41,6 +41,7 @@ const imageReducer = createReducer([], {
     const pixelsInR = findRegion(state, column, row, state[row][column]);
 
     pixelsInR.map(pixel => (state[pixel[1]][pixel[0]] = color));
+    state[row][column] = color;
   },
 });
 

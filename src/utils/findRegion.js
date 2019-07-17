@@ -23,21 +23,30 @@ const neighbors = (coordinate, image, color) => {
 
 export function findRegion(image, column, row, colorToMatch) {
   const visited = new Set();
-  const shouldBeVisited = [[column, row]];
+  let shouldBeVisited = new Set();
+  shouldBeVisited.add([column, row].toString());
   const coordinatesInR = [];
 
-  while (shouldBeVisited.length) {
-    console.log(shouldBeVisited);
-    const currentCoordinate = shouldBeVisited.shift();
-    visited.add(currentCoordinate.toString());
-    const validNeighbors = neighbors(currentCoordinate, image, colorToMatch);
+  while (shouldBeVisited.size) {
+    const currentCoordinateString = shouldBeVisited.values().next().value;
+    let currentCoordinate = currentCoordinateString.split(',');
+    currentCoordinate = [
+      parseInt(currentCoordinate[0]),
+      parseInt(currentCoordinate[1]),
+    ];
+    if (!visited.has(currentCoordinate.toString())) {
+      visited.add(currentCoordinate.toString());
+      const validNeighbors = neighbors(currentCoordinate, image, colorToMatch);
 
-    for (let neighbor of validNeighbors) {
-      if (!visited.has(neighbor.toString())) {
-        shouldBeVisited.push(neighbor);
-        coordinatesInR.push(neighbor);
+      for (let neighbor of validNeighbors) {
+        if (!visited.has(neighbor.toString())) {
+          shouldBeVisited.add(neighbor.toString());
+          coordinatesInR.push(neighbor);
+        }
       }
     }
+
+    shouldBeVisited.delete(shouldBeVisited.values().next().value);
   }
 
   return coordinatesInR;
